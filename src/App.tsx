@@ -9,6 +9,7 @@ import FlightSearch from './components/features/flight/flight-search';
 import FlightTracker from './components/features/tracking/flight-tracking';
 import SignIn from './components/auth/sign-in';
 import PrivateRoute from './provider/ptivate-route';
+import { AuthProvider } from './context/auth-context';
 
 
 export default function App() {
