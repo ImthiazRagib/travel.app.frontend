@@ -2,7 +2,6 @@ import './App.css';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Header from './components/header';
 import Footer from './components/footer';
-import FlightSearch from './components/features/flight/flight-search';
 // import HotelSearch from './features/hotel/HotelSearch';
 // import VisaForm from './features/visa/VisaForm';
 // import ToursList from './features/tours/ToursList';
@@ -10,6 +9,7 @@ import FlightTracker from './components/features/tracking/flight-tracking';
 import SignIn from './components/auth/sign-in';
 import PrivateRoute from './provider/ptivate-route';
 import { AuthProvider } from './context/auth-context';
+import LandingPage from './components/landing-page';
 
 
 export default function App() {
@@ -24,7 +24,7 @@ export default function App() {
             <Route path="/tours" element={<ToursList />} /> */}
             <Route path="/tracking" element={<PrivateRoute><FlightTracker /></PrivateRoute>} />
             <Route path="/signin" element={<SignIn />} />
-            <Route path="/" element={<FlightSearch />} />
+            <Route path="/" element={<LandingPage />} />
           </Routes>
         </main>
         <Footer />
