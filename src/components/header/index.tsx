@@ -7,9 +7,16 @@ import { Moon, Sun, User } from 'lucide-react';
 
 export default function Header() {
     const { theme, toggle } = useTheme();
-    console.log(`🚀 ~ Header ~ { theme, toggle }:`, { theme, toggle })
     const { user, signOut } = useAuth();
     const [userMenuOpen, setUserMenuOpen] = useState(false);
+
+    const routes = [
+        // { to: '/tours', label: 'Tours' },
+        { to: '/hotels', label: 'Hotels' },
+        // { to: '/visa', label: 'Visa' },
+        { to: '/flights', label: 'Flights' },
+        { to: '/tracking', label: 'Flight Track' }
+    ]
 
     // End of Selection
     return (
@@ -17,10 +24,9 @@ export default function Header() {
             <div className="container mx-auto px-4 py-3 flex items-center justify-between">
                 <Link to="/" className="font-semibold text-lg text-white">Gozayan Travel</Link>
                 <nav className="flex items-center gap-3">
-                    <Link to="/hotels" className="hidden sm:inline text-white">Hotels</Link>
-                    {/* <Link to="/tours" className="hidden sm:inline text-white">Tours</Link>
-                    <Link to="/visa" className="hidden sm:inline text-white">Visa</Link> */}
-                    <Link to="/tracking" className="hidden sm:inline text-white">Flight Track</Link>
+                    {routes.map(({ to, label }) => (
+                        <Link key={to} to={to} className="hidden sm:inline text-white">{label}</Link>
+                    ))}
                     {user ? (
                         <div className="relative">
                             <button

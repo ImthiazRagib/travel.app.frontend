@@ -12,6 +12,7 @@ import { AuthProvider } from './context/auth-context';
 import LandingPage from './components/landing-page';
 import Hotels from './components/hotels';
 import HotelDetails from './components/hotels/details';
+import Flights from './components/flights';
 
 
 export default function App() {
@@ -23,6 +24,9 @@ export default function App() {
           <Routes>
             <Route path="/hotels" element={<Hotels />} />
             <Route path="/hotels/:id" element={<HotelDetails />} />
+
+            {/* Flights */}
+            <Route path="/flights" element={<Flights />} />
             {/* <Route path="/visa" element={<VisaForm />} />
             <Route path="/tours" element={<ToursList />} /> */}
             <Route path="/tracking" element={<PrivateRoute><FlightTracker /></PrivateRoute>} />

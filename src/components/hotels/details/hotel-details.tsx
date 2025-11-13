@@ -28,7 +28,7 @@ export default function HotelDetailsPage({
 
     const handleSubmit = (data: any) => {
         console.log("Booking data:", data);
-        closeModal();
+        // closeModal();
     };
 
     return (
@@ -89,7 +89,8 @@ export default function HotelDetailsPage({
             </div>
             <HotelBookingModal
                 isOpen={isModalOpen}
-                onClose={handleSubmit}
+                onSubmit={handleSubmit}
+                onClose={closeModal}
                 hotelName={name}
             />
         </div>
