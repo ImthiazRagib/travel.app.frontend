@@ -1,9 +1,11 @@
 import React, { useState } from "react";
 import { ArrowLeftRight, Calendar, Users } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 export default function FlightForm() {
-  const [from, setFrom] = useState("Dhaka");
-  const [to, setTo] = useState("Cox's Bazar");
+  const navigate  = useNavigate()
+  const [from, setFrom] = useState("");
+  const [to, setTo] = useState("");
   const [departure, setDeparture] = useState("");
   const [returnDate, setReturnDate] = useState("");
   const [traveler, setTraveler] = useState("1 Traveler");
@@ -23,22 +25,41 @@ export default function FlightForm() {
     setTo(temp);
   };
 
+  const handleSearch = () => {
+    navigate('/flights')
+  }
+
   return (
     <div className="grid grid-cols-1 md:grid-cols-5 gap-4 items-end w-full max-w-6xl mx-auto p-4 bg-gray-50 dark:bg-gray-900 rounded-2xl shadow-sm">
       {/* From */}
       <div className="flex flex-col border rounded-xl px-4 py-3 bg-white dark:bg-gray-800 shadow-sm">
         <label className="text-xs text-gray-500">FROM</label>
-        <select
-          className="bg-transparent text-lg font-semibold text-blue-800 dark:text-blue-300 focus:outline-none"
-          value={from}
-          onChange={(e) => setFrom(e.target.value)}
-        >
-          {locations.map((loc) => (
-            <option key={loc.code} value={loc.name}>
-              {loc.name} ({loc.code})
-            </option>
-          ))}
-        </select>
+        <div className="relative">
+          <input
+            type="text"
+            value={from}
+            onChange={(e) => setFrom(e.target.value)}
+            placeholder="Search city or airport"
+            className="bg-transparent text-lg font-semibold text-blue-800 dark:text-blue-300 focus:outline-none w-full"
+          />
+          {from && (
+            <ul className="absolute top-full left-0 right-0 bg-white dark:bg-gray-800 border rounded-b-xl shadow-md max-h-48 overflow-y-auto z-10">
+              {locations
+                .filter((loc) =>
+                  loc.name.toLowerCase().includes(from.toLowerCase())
+                )
+                .map((loc) => (
+                  <li
+                    key={loc.code}
+                    onClick={() => setFrom(loc.name)}
+                    className="px-4 py-2 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer"
+                  >
+                    {loc.name} ({loc.code})
+                  </li>
+                ))}
+            </ul>
+          )}
+        </div>
       </div>
 
       {/* Swap icon */}
@@ -54,17 +75,32 @@ export default function FlightForm() {
       {/* To */}
       <div className="flex flex-col border rounded-xl px-4 py-3 bg-white dark:bg-gray-800 shadow-sm">
         <label className="text-xs text-gray-500">TO</label>
-        <select
-          className="bg-transparent text-lg font-semibold text-blue-800 dark:text-blue-300 focus:outline-none"
-          value={to}
-          onChange={(e) => setTo(e.target.value)}
-        >
-          {locations.map((loc) => (
-            <option key={loc.code} value={loc.name}>
-              {loc.name} ({loc.code})
-            </option>
-          ))}
-        </select>
+        <div className="relative">
+          <input
+            type="text"
+            value={to}
+            onChange={(e) => setTo(e.target.value)}
+            placeholder="Search city or airport"
+            className="bg-transparent text-lg font-semibold text-blue-800 dark:text-blue-300 focus:outline-none w-full"
+          />
+          {to && (
+            <ul className="absolute top-full left-0 right-0 bg-white dark:bg-gray-800 border rounded-b-xl shadow-md max-h-48 overflow-y-auto z-10">
+              {locations
+                .filter((loc) =>
+                  loc.name.toLowerCase().includes(to.toLowerCase())
+                )
+                .map((loc) => (
+                  <li
+                    key={loc.code}
+                    onClick={() => setTo(loc.name)}
+                    className="px-4 py-2 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer"
+                  >
+                    {loc.name} ({loc.code})
+                  </li>
+                ))}
+            </ul>
+          )}
+        </div>
       </div>
 
       {/* Departure Date */}
@@ -122,7 +158,7 @@ export default function FlightForm() {
 
       {/* Search Button */}
       <div className="col-span-full flex justify-center mt-4">
-        <button className="bg-yellow-400 hover:bg-yellow-500 text-blue-900 font-semibold px-10 py-3 rounded-lg transition-colors">
+        <button className="bg-yellow-400 hover:bg-yellow-500 text-blue-900 font-semibold px-10 py-3 rounded-lg transition-colors" onClick={handleSearch}>
           Search
         </button>
       </div>

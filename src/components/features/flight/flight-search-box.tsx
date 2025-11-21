@@ -4,6 +4,7 @@ import FlightForm from "./flight-form";
 
 export default function FlightSearchBox() {
   const [tripType, setTripType] = useState("oneway");
+  const [tab, setTab] = useState("flight");
 
   const tabItems = [
     { id: "flight", label: "Flight", icon: <Plane size={18} /> },
@@ -19,17 +20,18 @@ export default function FlightSearchBox() {
         
         {/* Tabs */}
         <div className="flex justify-center gap-6 mb-6 border-b border-gray-200 dark:border-gray-700">
-          {tabItems.map((tab) => (
+          {tabItems.map((_tab) => (
             <button
-              key={tab.id}
+              key={_tab.id}
               className={`flex items-center gap-2 pb-2 px-2 border-b-2 transition-all text-sm font-medium ${
-                tab.id === "flight"
-                  ? "border-yellow-400 text-blue-700"
-                  : "border-transparent text-gray-500 hover:text-blue-600"
+                _tab.id === tab
+                  ? "border-yellow-400 text-blue-700 dark:text-yellow-400"
+                  : "border-transparent text-gray-500 dark:text-gray-300 hover:text-blue-600"
               }`}
+              onClick={() => setTab(_tab.id)}
             >
-              {tab.icon}
-              {tab.label}
+              {_tab.icon}
+              {_tab.label}
             </button>
           ))}
         </div>
