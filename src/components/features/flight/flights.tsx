@@ -1,14 +1,17 @@
 import React, { useState } from 'react';
-import { Plane, MapPin, Calendar, Users, ArrowLeftRight } from 'lucide-react';
-import dayjs, { Dayjs } from 'dayjs';
+import dayjs from 'dayjs';
 import SearchFlightHeader from './search-components/search-flight-header';
 import FlightList from './search-components/flight-lists';
+import { useFlights } from '../../../redux/features/flights/useFlights';
+import { useAppDispatch, useAppSelector } from '../../../redux/store';
+import { setFlightFilters } from '../../../redux/features/flights/flight.filters.slice';
 
 interface FlightSearchForm {
     origin: string;
     destination: string;
     departureDate: string;
     returnDate: string;
+    arrivalTime: string;
     passengers: number;
     tripType: 'roundtrip' | 'oneway';
 }
@@ -19,9 +22,23 @@ const Flights: React.FC = () => {
         destination: '',
         departureDate: dayjs().format('YYYY-MM-DD'),
         returnDate: '',
+        arrivalTime: '',
         passengers: 1,
         tripType: 'roundtrip',
     });
+
+    const dispatch = useAppDispatch();
+    const flightFilters = useAppSelector((s) => s.flightFilters);
+
+    const { data } = useFlights({
+        maxPrice: 1000,
+        stops: 'any',
+        airlines: [] as string[],
+        departureTime: form.departureDate,
+        arrivalTime: form.arrivalTime,
+        returnDate: form.returnDate
+    })
+    console.log("🚀 ~ Flights ~ data:", flightFilters, data)
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         const { name, value } = e.target;
@@ -39,68 +56,21 @@ const Flights: React.FC = () => {
 
     const today = dayjs().format('YYYY-MM-DD');
 
-    const [filters, setFilters] = useState({
-        maxPrice: 1000,
-        stops: 'any',
-        airlines: [] as string[],
-    });
-
     const [showResults, setShowResults] = useState(false);
-
-    const sampleFlights = [
-        {
-            id: 1,
-            airline: 'SkyWings',
-            flightNumber: 'SW123',
-            origin: 'JFK',
-            destination: 'LAX',
-            departure: '08:00',
-            arrival: '11:30',
-            duration: '5h 30m',
-            price: 299,
-            stops: 0,
-        },
-        {
-            id: 2,
-            airline: 'AeroFly',
-            flightNumber: 'AF456',
-            origin: 'JFK',
-            destination: 'LAX',
-            departure: '14:15',
-            arrival: '17:45',
-            duration: '5h 30m',
-            price: 350,
-            stops: 1,
-        },
-        {
-            id: 3,
-            airline: 'CloudAir',
-            flightNumber: 'CA789',
-            origin: 'JFK',
-            destination: 'LAX',
-            departure: '22:00',
-            arrival: '01:30+1',
-            duration: '5h 30m',
-            price: 199,
-            stops: 0,
-        },
-    ];
 
     const handleSearch = () => {
         if (!form.origin || !form.destination || !form.departureDate) return;
         setShowResults(true);
     };
 
-    const handleFilterChange = (key: string, value: any) => {
-        setFilters((prev) => ({ ...prev, [key]: value }));
-    };
+    // const handleFilterChange = (key: string, value: any) => {
+    //     setFilters((prev) => ({ ...prev, [key]: value }));
+    // };
 
-    const filteredFlights = sampleFlights.filter((flight) => {
-        if (flight.price > filters.maxPrice) return false;
-        if (filters.stops !== 'any' && flight.stops !== Number(filters.stops)) return false;
-        if (filters.airlines.length && !filters.airlines.includes(flight.airline)) return false;
-        return true;
-    });
+    // Handler passed to child filter component to update Redux
+    const handleFilterChange = (payload: Partial<typeof flightFilters>) => {
+        dispatch(setFlightFilters(payload));
+    };
 
     return (
         <div className="min-h-screen">
@@ -118,11 +88,11 @@ const Flights: React.FC = () => {
                                 min="100"
                                 max="1000"
                                 step="50"
-                                value={filters.maxPrice}
-                                onChange={(e) => handleFilterChange('maxPrice', Number(e.target.value))}
+                                value={flightFilters.maxPrice}
+                                onChange={(e) => handleFilterChange({ maxPrice: Number(e.target.value) })}
                                 className="w-full"
                             />
-                            <div className="text-right text-sm text-gray-500">${filters.maxPrice}</div>
+                            <div className="text-right text-sm text-gray-500">${flightFilters.maxPrice}</div>
                         </div>
 
                         <div>
@@ -138,8 +108,8 @@ const Flights: React.FC = () => {
                                             type="radio"
                                             name="stops"
                                             value={opt.value}
-                                            checked={filters.stops === opt.value}
-                                            onChange={(e) => handleFilterChange('stops', e.target.value)}
+                                            checked={flightFilters.stops === opt.value}
+                                            onChange={(e) => handleFilterChange({ 'stops': e.target.value })}
                                             className="text-indigo-600"
                                         />
                                         <span className="text-sm text-gray-700">{opt.label}</span>
@@ -155,12 +125,12 @@ const Flights: React.FC = () => {
                                     <label key={airline} className="flex items-center gap-2">
                                         <input
                                             type="checkbox"
-                                            checked={filters.airlines.includes(airline)}
+                                            checked={flightFilters.airlines.includes(airline)}
                                             onChange={(e) => {
                                                 const updated = e.target.checked
-                                                    ? [...filters.airlines, airline]
-                                                    : filters.airlines.filter((a) => a !== airline);
-                                                handleFilterChange('airlines', updated);
+                                                    ? [...flightFilters.airlines, airline]
+                                                    : flightFilters.airlines.filter((a) => a !== airline);
+                                                handleFilterChange({ airlines: updated });
                                             }}
                                             className="text-indigo-600"
                                         />
@@ -174,7 +144,8 @@ const Flights: React.FC = () => {
 
                 {/* Main Content */}
                 <main className="lg:col-span-3">
-                    <FlightList showResults={showResults} filteredFlights={filteredFlights} />
+                    Render
+                    {/* <FlightList showResults={showResults} flights={data.flights} /> */}
                 </main>
             </div>
         </div>

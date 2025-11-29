@@ -1,14 +1,14 @@
 import { Link } from 'react-router-dom';
 import useTheme from '../../hooks/app-theme';
-import { useAuth } from '../../context/auth-context';
 import { useState } from 'react';
 import { Moon, Sun, User } from 'lucide-react';
+import { useAppSelector } from '../../redux/store';
 
 
 export default function Header() {
     const { theme, toggle } = useTheme();
     console.log(`🚀 ~ Header ~ { theme, toggle }:`, { theme, toggle })
-    const { user, signOut } = useAuth();
+    const { user, status } = useAppSelector((s) => s.auth)
     const [userMenuOpen, setUserMenuOpen] = useState(false);
 
     // End of Selection
@@ -56,7 +56,7 @@ export default function Header() {
                                     <li>
                                         <button
                                             onClick={() => {
-                                                signOut();
+                                                // signOut();
                                                 setUserMenuOpen(false);
                                             }}
                                             className="block w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer"

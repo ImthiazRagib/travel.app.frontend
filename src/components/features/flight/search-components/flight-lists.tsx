@@ -1,27 +1,34 @@
-import { Plane } from "lucide-react";
+import React from "react";
 
 const FlightList: React.FC<{
     showResults: boolean;
-    filteredFlights: Array<{
-        id: number;
-        airline: string;
+    flights: Array<{
+        id: string;
         flightNumber: string;
-        origin: string;
-        destination: string;
-        departure: string;
-        arrival: string;
-        duration: string;
-        stops: number;
+        from: string;
+        to: string;
+        departureTime: string;
+        arrivalTime: string;
+        stops: string;
         price: number;
+        airlineId: string;
+        airline: {
+            id: string;
+            name: string;
+            code: string;
+            logo: string;
+        };
     }>;
-}> = ({ showResults, filteredFlights }) => {
-    console.log(`🚀 ~ FlightList ~ { showResults, filteredFlights }:`, { showResults, filteredFlights })
+}> = ({ showResults, flights }) => {
+    console.log(flights);
+    
+
     return (
         <main className="lg:col-span-3 space-y-6">
             {/* Flight Cards List */}
-            {showResults && (
+            {/* {showResults && (
                 <div className="space-y-4">
-                    {filteredFlights.map((flight) => (
+                    {flights.map((flight) => (
                         <div key={flight.id} className="bg-white rounded-xl shadow p-4 flex items-center justify-between">
                             <div className="flex items-center gap-4">
                                 <div className="w-12 h-12 bg-indigo-100 rounded-full flex items-center justify-center">
@@ -29,16 +36,17 @@ const FlightList: React.FC<{
                                 </div>
                                 <div>
                                     <div className="font-semibold text-gray-800">
-                                        {flight.airline} · {flight.flightNumber}
+                                        {flight.airline.name} · {flight.flightNumber}
                                     </div>
                                     <div className="text-sm text-gray-500">
-                                        {flight.origin} → {flight.destination}
+                                        {flight.from} → {flight.to}
                                     </div>
                                     <div className="text-sm text-gray-500">
-                                        {flight.departure} – {flight.arrival} · {flight.duration}
+                                        {flight.departureTime} – {flight.arrivalTime} · {`1d`}
                                     </div>
                                     <div className="text-xs text-gray-400">
                                         {flight.stops === 0 ? 'Non-stop' : `${flight.stops} stop${flight.stops > 1 ? 's' : ''}`}
+                                        {flight.stops}
                                     </div>
                                 </div>
                             </div>
@@ -51,7 +59,8 @@ const FlightList: React.FC<{
                         </div>
                     ))}
                 </div>
-            )}
+            )} */}
+            <>Nothing</>
         </main>
     )
 };
