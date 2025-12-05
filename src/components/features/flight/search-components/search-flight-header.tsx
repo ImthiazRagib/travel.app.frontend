@@ -214,7 +214,7 @@ const SearchFlightHeader: React.FC<SearchFlightHeaderProps> = ({
             </select>
           </div>
           <button
-            onClick={handleSearch}
+            onClick={() => handleSearch()}
             disabled={!form.origin || !form.destination || !form.departureDate}
             className="bg-indigo-600 text-white font-semibold py-3 px-6 rounded-lg hover:bg-indigo-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition flex items-center justify-center gap-2"
           >

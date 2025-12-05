@@ -1,32 +1,66 @@
+import { Plane } from "lucide-react";
 import React from "react";
+import Pagination from "../../../primary/paginations/paginations";
 
 const FlightList: React.FC<{
-    showResults: boolean;
-    flights: Array<{
-        id: string;
-        flightNumber: string;
-        from: string;
-        to: string;
-        departureTime: string;
-        arrivalTime: string;
-        stops: string;
-        price: number;
-        airlineId: string;
-        airline: {
+    data: {
+        flights: Array<{
             id: string;
-            name: string;
-            code: string;
-            logo: string;
-        };
-    }>;
-}> = ({ showResults, flights }) => {
-    console.log(flights);
-    
+            flightNumber: string;
+            from: string;
+            to: string;
+            departureTime: string;
+            arrivalTime: string;
+            stops: string;
+            price: number;
+            airlineId: string;
+            availableSeats: number;
+            seatCapacity: number;
+            createdAt: string;
+            updatedAt: string;
+            airline: {
+                id: string;
+                name: string;
+                code: string;
+                logo: string;
+                country?: string;
+                isVerified?: boolean;
+                createdAt?: string;
+                updatedAt?: string;
+                deletedAt?: string | null;
+                userId?: string;
+            };
+        }>
+        limit: number
+        total: number
+        totalPages: number
+        currentPage: number;
+    }
+    loading: boolean
+}> = ({ data, loading }) => {
+
+    if (loading) {
+        return (
+            <div className="text-center text-gray-500">
+                Loading flights...
+            </div>
+        )
+    }
+    const { flights = [], limit, total, totalPages, currentPage } = data
+
+    if (!flights.length) {
+        return (
+            <div className="text-center text-gray-500">
+                No flights found.
+            </div>
+        )
+    }
 
     return (
-        <main className="lg:col-span-3 space-y-6">
+        <main className="">
+        <div className="lg:col-span-3 space-y-6">
             {/* Flight Cards List */}
-            {/* {showResults && (
+            {flights.length > 0 && (
                 <div className="space-y-4">
                     {flights.map((flight) => (
                         <div key={flight.id} className="bg-white rounded-xl shadow p-4 flex items-center justify-between">
@@ -45,7 +79,7 @@ const FlightList: React.FC<{
                                         {flight.departureTime} – {flight.arrivalTime} · {`1d`}
                                     </div>
                                     <div className="text-xs text-gray-400">
-                                        {flight.stops === 0 ? 'Non-stop' : `${flight.stops} stop${flight.stops > 1 ? 's' : ''}`}
+                                        {/* {flight.stops === 0 ? 'Non-stop' : `${flight.stops} stop${flight.stops > 1 ? 's' : ''}`} */}
                                         {flight.stops}
                                     </div>
                                 </div>
@@ -59,8 +93,16 @@ const FlightList: React.FC<{
                         </div>
                     ))}
                 </div>
-            )} */}
-            <>Nothing</>
+            )}
+        </div>
+
+        <Pagination
+            totalPages={totalPages}
+            currentPage={currentPage}
+            limit={limit}
+            total={total}
+            onPageChange={(page) => console.log(page)}
+        />
         </main>
     )
 };

@@ -22,8 +22,9 @@ export const useFlights = (params: Record<string, any> = {}) => {
         signal.addEventListener("abort", () => source.cancel("Query aborted"));
       }
       const res = await flightAPI.getAll({ ...params, _ts: Date.now() }); // add ts if you want to bust caches
-      return res.data?.data;
+      return res.data?.data || {};
     },
+    // enabled: false, // ⛔️ prevents auto-fetch on component mount
     // react-query options:
     staleTime: 1000 * 30, // 30s data considered fresh
     gcTime: 1000 * 60 * 5, // 5 minutes cache

@@ -30,15 +30,12 @@ const Flights: React.FC = () => {
     const dispatch = useAppDispatch();
     const flightFilters = useAppSelector((s) => s.flightFilters);
 
-    const { data } = useFlights({
-        maxPrice: 1000,
-        stops: 'any',
-        airlines: [] as string[],
-        departureTime: form.departureDate,
-        arrivalTime: form.arrivalTime,
-        returnDate: form.returnDate
-    })
-    console.log("🚀 ~ Flights ~ data:", flightFilters, data)
+      // used only to trigger refetch on click
+  const [triggerTs, setTriggerTs] = useState(Date.now());
+
+    const searchParams = {...form, ...flightFilters, passengers: Number(form.passengers), triggerTs }
+
+    const { data, isLoading, refetch } = useFlights(searchParams)
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         const { name, value } = e.target;
@@ -49,18 +46,13 @@ const Flights: React.FC = () => {
         setForm((prev) => ({ ...prev, tripType, returnDate: tripType === 'oneway' ? '' : prev.returnDate }));
     };
 
-    //   const handleSearch = () => {
-    //     // TODO: integrate with backend
-    //     console.log('Searching flights with:', form);
-    //   };
-
     const today = dayjs().format('YYYY-MM-DD');
-
-    const [showResults, setShowResults] = useState(false);
 
     const handleSearch = () => {
         if (!form.origin || !form.destination || !form.departureDate) return;
-        setShowResults(true);
+        // * TODO: integrate with backend
+        console.log('Searching flights with:', form);
+        setTriggerTs(Date.now());
     };
 
     // const handleFilterChange = (key: string, value: any) => {
@@ -144,8 +136,7 @@ const Flights: React.FC = () => {
 
                 {/* Main Content */}
                 <main className="lg:col-span-3">
-                    Render
-                    {/* <FlightList showResults={showResults} flights={data.flights} /> */}
+                    <FlightList data={data} loading={isLoading} />
                 </main>
             </div>
         </div>

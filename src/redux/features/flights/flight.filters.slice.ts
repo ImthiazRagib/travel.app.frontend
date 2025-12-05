@@ -9,7 +9,7 @@ export interface FlightFiltersState {
 }
 
 const initialState: FlightFiltersState = {
-  airlines: ["all"],
+  airlines: [],
   stops: "nonstop",
   maxPrice: 2000,
   departureTime: "2025-03-02T14:00:00Z",
